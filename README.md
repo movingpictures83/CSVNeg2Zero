@@ -2,6 +2,7 @@
 # Language: Python
 # Input: CSV (file with negative values)
 # Output: EDA (edge attribute file for Cytoscape)
+# Tested with: PluMA 1.0, Python 2.7
 
 PluMA plugin to take a network represented as a CSV file and produce
 an EDge Attribute (EDA) file for Cytoscape, with all negative-weight
