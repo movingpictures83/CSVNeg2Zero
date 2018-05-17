@@ -1,0 +1,2 @@
+Prefix plugins/CSVNeg2Zero/example/
+Plugin CSVNeg2Zero inputfile corrP.csv outputfile corrP.eda
