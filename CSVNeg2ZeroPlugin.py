@@ -1,29 +1,50 @@
 import sys
-#import numpy
-#from plugins.CSV2GML.CSV2GMLPlugin import *
-from CSV2GML.CSV2GMLPlugin import *
+import numpy
 
 
 
-class CSVNeg2ZeroPlugin(CSV2GMLPlugin):
+class CSVNeg2ZeroPlugin:
+   def input(self, filename):
+      self.myfile = filename
+
+   def run(self):
+      filestuff = open(self.myfile, 'r')
+      self.firstline = filestuff.readline()
+      lines = []
+      for line in filestuff:
+         lines.append(line)
+
+      self.m = len(lines)
+      self.samples = []
+      self.bacteria = self.firstline.split(',')
+      if (self.bacteria.count('\"\"') != 0):
+         self.bacteria.remove('\"\"')
+      self.n = len(self.bacteria)
+      self.ADJ = numpy.zeros([self.m, self.n])
+      i = 0
+      for i in range(self.m):
+            contents = lines[i].split(',')
+            self.samples.append(contents[0])
+            for j in range(self.n):
+               value = float(contents[j+1])
+               if (value < 0):
+                   value = 0
+               self.ADJ[i][j] = value
+            i += 1
+
    def output(self, filename):
-      filestuff = open(filename, 'w')
-      filestuff.write("name\tmappedWeight\n")
-
-      for i in range(self.n):
-         self.bacteria[i] = self.bacteria[i].strip()
-         if str.isdigit(self.bacteria[i]):
-            self.bacteria[i] = 'X' + self.bacteria[i]
-      for i in range(self.n):
+      filestuff2 = open(filename, 'w')
+      
+      filestuff2.write(self.firstline)
+            
+      for i in range(self.m):
+         filestuff2.write(self.samples[i]+',')
          for j in range(self.n):
-               bac1 = self.bacteria[i].strip()
-               bac2 = self.bacteria[j].strip()
-               if (bac1[0] == '\"'):
-                   bac1 = bac1[1:len(bac1)-1]
-                   bac2 = bac2[1:len(bac2)-1]
-               if (i != j and float(self.ADJ[i][j]) > 0):
-                     filestuff.write(bac1+' '+'('+'pp'+')'+' '+bac2+'\t'+str(self.ADJ[i][j])+'\n')
-               elif (i != j and float(self.ADJ[i][j]) < 0):
-                     filestuff.write(bac1+' '+'('+'pp'+')'+' '+bac2+'\t'+'0'+'\n')
+            filestuff2.write(str(self.ADJ[i][j]))
+            if (j < self.n-1):
+               filestuff2.write(",")
+            else:
+               filestuff2.write("\n")
+
 
 
